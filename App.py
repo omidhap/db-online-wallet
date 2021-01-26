@@ -329,9 +329,16 @@ def login():
 
 @app.route('/query1', methods=['post'])
 def query1():
-    fromWal = request.json['fromWal']
-    toWal = request.json['toWal']
-    return jsonify(transaction.find_by_from_to(fromWal,toWal))
+    if('role' in session):
+        if(session['role']=="admin"):
+            fromWal = request.json['fromWal']
+            toWal = request.json['toWal']
+            return jsonify(transaction.find_by_from_to(fromWal,toWal))
+        else:
+            return ("warning!! your role is :"+session['role'])
+    else:
+        return("not permitted")
+
 
 
 
@@ -340,8 +347,15 @@ def query1():
 
 @app.route('/query2', methods=['post'])
 def query2():
-    walletId = request.json['walId']
-    return  str((datetime.now() - wallet.find_by_id(walletId)['created']).total_seconds() / 3600) + "  hours"
+    if ('role' in session):
+        if (session['role'] == "admin"):
+            walletId = request.json['walId']
+            return  str((datetime.now() - wallet.find_by_id(walletId)['created']).total_seconds() / 3600) + "  hours"
+        else:
+            return ("warning!! your role is :" + session['role'])
+
+    else:
+        return ("not permitted")
 
 
 
@@ -350,36 +364,60 @@ def query2():
 
 @app.route('/query3', methods=['post'])
 def query3():
-    customerId = request.json['cusId']
-    return  jsonify(wallet.find_by_customer_id(customerId))
+    if ('role' in session):
+        if (session['role'] == "admin"):
+            customerId = request.json['cusId']
+            return  jsonify(wallet.find_by_customer_id(customerId))
+        else:
+            return ("warning!! your role is :" + session['role'])
+    else:
+        return ("not permitted")
 
 
 
 
 @app.route('/query4', methods=['post'])
 def query4():
-    transactionID = request.json['tid']
-    return  jsonify(transaction.find_by_id(transactionID))
+    if ('role' in session):
+        if (session['role'] == "staff"):
+            transactionID = request.json['tid']
+            return  jsonify(transaction.find_by_id(transactionID))
 
-
+        else:
+                return ("warning!! your role is :"+session['role'])
+    else:
+        return("not permitted")
 
 
 @app.route('/query5', methods=['post'])
 def query5():
-    walId = request.json['wid']
-    return "your balance:   "+str(wallet.find_by_id(walId)['balance'])
+    if ('role' in session):
+        if (session['role'] == "guest"):
+            walId = request.json['wid']
+            return "your balance:   "+str(wallet.find_by_id(walId)['balance'])
 
 
 
 @app.route('/query6', methods=['post'])
 def query6():
-    walId = request.json['wid']
-    return jsonify(transaction.find_by_from_or_to(walId))
-
+    if ('role' in session):
+        if (session['role'] == "admin"):
+            walId = request.json['wid']
+            return jsonify(transaction.find_by_from_or_to(walId))
+        else:
+            return ("warning!! your role is :" + session['role'])
+    else:
+        return ("not permitted")
 @app.route('/query7', methods=['post'])
 def query7():
-    date = request.json['date']
-    return  jsonify(transaction.find_by_date(date))
+    if ('role' in session):
+        if (session['role'] == "customer"):
+            date = request.json['date']
+            return  jsonify(transaction.find_by_date(date))
+        else:
+            return ("warning!! your role is :" + session['role'])
+    else:
+        return ("not permitted")
 
 if __name__ == '__main__':
     app.run(debug=True)
