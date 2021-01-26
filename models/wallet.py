@@ -31,3 +31,6 @@ class Wallet(object):
 
     def delete(self, id):
         return self.db.delete(id, self.collection_name)
+
+    def find_by_customer_id(self, id):
+        return self.db.find_by_customer_id(id, self.collection_name)

@@ -11,6 +11,7 @@ class Customer(object):
             "name": "string",
             "created": "datetime",
             "updated": "datetime",
+            "wallets":[]
         }
 
     def create(self, customer):

@@ -9,6 +9,7 @@ class Staff(object):
 
         self.fields = {
             "name": "string",
+
             "role": "string",
             "status": "string",
             "created": "datetime",
@@ -30,3 +31,6 @@ class Staff(object):
 
     def delete(self, id):
         return self.db.delete(id, self.collection_name)
+
+    def find_by_id_name(self,id,name):
+        return self.db.find_by_id_name(id,name,self.collection_name)
